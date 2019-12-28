@@ -1,0 +1,22 @@
+# Hello World K8S Operator tutorial with Operator SDK and OpenShift
+
+This guide walks through an example of building a simple hw-operator using the operator-sdk CLI tool and controller-runtime library API.
+
+### Prerequisites 
+1. [Golang](https://golang.org/doc/install) 
+2. [Operator SDK CLI v0.13.0](https://github.com/operator-framework/operator-sdk/releases/tag/v0.13.0)
+3. [OpenShift client (oc command)](https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/)
+4. OpenShift cluster
+5. Optional - IDE with Golang support ([VSCode](https://code.visualstudio.com/download), [GoLand](https://www.jetbrains.com/go), etc..)
+
+
+### Let's start
+
+As for example, we going to implement simple hw-operator which will encode operational logic of deploying a new Nginx web server with single website. The website will be constructed from basic HTML code.
+The hw-operator operator will take care of the following K8S/OpenShift objects
+* Deployment
+* Service
+* Router
+* ConfigMap with basic HTML code
+
+The operator diagram
