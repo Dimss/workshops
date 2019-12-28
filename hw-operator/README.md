@@ -22,3 +22,13 @@ The hw-operator operator will take care of the following K8S/OpenShift objects
 ### The operator diagram
 
 ![diagram](hw-operator-diagram.png)
+
+### Project setup 
+Let’s start from creating directory and [operator project layout](https://github.com/operator-framework/operator-sdk/blob/master/doc/project_layout.md)
+
+```bash
+mkdir -p $GOPATH/src/github.com
+cd $GOPATH/src/github.com
+operator-sdk new hw-operator --vendor=true
+cd hw-operator
+```
