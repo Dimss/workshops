@@ -19,5 +19,6 @@ The hw-operator operator will take care of the following K8S/OpenShift objects
 * Router
 * ConfigMap with basic HTML code
 
-The operator diagram
+### The operator diagram
+
 ![diagram](hw-operator-diagram.png)
