@@ -90,7 +90,7 @@ Edit the `cmd/manager/main.go` and add the following code
     ```go
     routev1 "github.com/openshift/api/route/v1"
     ```
-2. To the main function, add the following, **note**, your 3rd party resource needs to be added above the `// Setup all Controllers` comment, also, don’t forget to run the `go mod vendor` to update vendor directory.
+2. To the main function, add the following code. **Note**, your 3rd party resource needs to be added above the `// Setup all Controllers` comment, also, don’t forget to run the `go mod vendor` to update vendor directory.
 
     ```go
     // Adding the routev1
