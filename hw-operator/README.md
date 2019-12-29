@@ -1,4 +1,4 @@
-# Hello World K8S Operator tutorial with Operator SDK and OpenShift
+## Hello World K8S Operator tutorial with Operator SDK and OpenShift
 
 This guide walks through an example of building a simple hw-operator using the operator-sdk CLI tool and controller-runtime library API.
 
