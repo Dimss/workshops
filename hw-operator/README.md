@@ -32,3 +32,11 @@ cd $GOPATH/src/github.com
 operator-sdk new hw-operator --vendor=true
 cd hw-operator
 ```
+
+Now, when we’ve created our empty operator project, let’s generate our first API. 
+Generate new Custom Resource Definition(CRD) API called HelloWorld, 
+with API version `<YOUR-NAME>.hw.okto.io/v1alpha1` and Kind `HelloWorld`.
+
+```bash
+operator-sdk add api --api-version=<YOUR-NAME>.hw.okto.io/v1alpha1 --kind=HelloWorld
+```
