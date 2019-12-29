@@ -70,3 +70,32 @@ Also, update the CRD file at `deploy/crds/<YOUR-NAME>.hw.okto.io_v1alpha1_hellow
 ```bash
  operator-sdk generate crds
 ``` 
+
+After each new code generation, or importing new library, do not forget to run the following command
+```bash
+go mod vendor
+```
+
+Add a new `Controller` to the project that will watch and reconcile the `HelloWorld` resource 
+```bash
+operator-sdk add controller --api-version=<YOUR-NAME>.hw.okto.io/v1alpha1 --kind=HelloWorld
+```
+This will scaffold a new `Controller` implementation under `pkg/controller/helloworld/helloworld_controller.go`
+
+Since `hw-operator` will use OpenShift Route for exposing the website to external access, we’ll have to register [3rd Party Resources](https://github.com/operator-framework/operator-sdk/blob/master/doc/user-guide.md#adding-3rd-party-resources-to-your-operator) to the `hw-operator`
+
+Edit the `cmd/manager/main.go` and add the following code
+
+1. To the import section add the following
+    ```go
+    routev1 "github.com/openshift/api/route/v1"
+    ```
+2. To the main function, add the following, **note**, your 3rd party resource needs to be added above the `// Setup all Controllers` comment, also, don’t forget to run the `go mod vendor` to update vendor directory.
+
+    ```go
+    // Adding the routev1
+    if err := routev1.AddToScheme(mgr.GetScheme()); err != nil {
+       log.Error(err, "")
+       os.Exit(1)
+    }
+    ```
