@@ -94,8 +94,8 @@ Edit the `cmd/manager/main.go` and add the following code
 
     ```go
     // Adding the routev1
-    if err := routev1.AddToScheme(mgr.GetScheme()); err != nil {
-       log.Error(err, "")
-       os.Exit(1)
+    if err := routev1.Install(mgr.GetScheme()); err != nil {
+      log.Error(err, "")
+      os.Exit(1)
     }
     ```
