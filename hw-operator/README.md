@@ -59,3 +59,9 @@ type HelloWorldStatus struct {
  Message string `json:"message"`
 }
 ```
+
+After modifying the `*_types.go` file always run the following command to update the generated code for that resource type
+
+```bash
+operator-sdk generate k8s
+```
