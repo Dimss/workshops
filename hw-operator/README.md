@@ -40,3 +40,22 @@ with API version `<YOUR-NAME>.hw.okto.io/v1alpha1` and Kind `HelloWorld`.
 ```bash
 operator-sdk add api --api-version=<YOUR-NAME>.hw.okto.io/v1alpha1 --kind=HelloWorld
 ```
+This will scaffold the HelloWorld resource API under `pkg/apis/<YOUR-NAME>/v1alpha1/...`
+
+Define the `spec` and `status` by modifying the `spec` and `status` go structs of the `HelloWorld` Custom Resource(CR) at `pkg/apis/<YOUR-NAME>/v1alpha1/helloworld_types.go`.
+
+Update the `HelloWorldSpec` struct to
+
+```go
+type HelloWorldSpec struct {
+ Message string `json:"message"`
+}
+```
+
+Update the HelloWorldStatus struct to
+
+```go
+type HelloWorldStatus struct {
+ Message string `json:"message"`
+}
+```
