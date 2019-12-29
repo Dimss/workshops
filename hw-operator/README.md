@@ -52,7 +52,7 @@ type HelloWorldSpec struct {
 }
 ```
 
-Update the HelloWorldStatus struct to
+Update the `HelloWorldStatus` struct to
 
 ```go
 type HelloWorldStatus struct {
@@ -65,3 +65,8 @@ After modifying the `*_types.go` file always run the following command to update
 ```bash
 operator-sdk generate k8s
 ```
+
+Also, update the CRD file at `deploy/crds/<YOUR-NAME>.hw.okto.io_v1alpha1_helloworld_cr.yaml` by running the following command
+```bash
+ operator-sdk generate crds
+``` 
