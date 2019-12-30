@@ -182,7 +182,7 @@ But first add the following functions to `pkg/controller/<YOUR-NAME>helloworld/<
 2. `manageDeployment`
     ```go
     // Reconcile loop resources managers functions
-    func (r *ReconcileDimaHelloWorld) manageDeployment(hw *dimav1alpha1.DimaHelloWorld, reqLogger logr.Logger) (*reconcile.Result, error) {
+    func (r *Reconcile<YOUR-NAME>HelloWorld) manageDeployment(hw *<YOUR-NAME>v1alpha1.<YOUR-NAME>HelloWorld, reqLogger logr.Logger) (*reconcile.Result, error) {
       deployment := &appsv1.Deployment{}
       err := r.client.Get(context.TODO(), types.NamespacedName{Name: hw.Name, Namespace: hw.Namespace}, deployment)
       if err != nil && errors.IsNotFound(err) {
@@ -207,7 +207,7 @@ But first add the following functions to `pkg/controller/<YOUR-NAME>helloworld/<
     ```
 3. `manageRoute`
     ```go
-    func (r *ReconcileDimaHelloWorld) manageRoute(hw *dimav1alpha1.DimaHelloWorld, reqLogger logr.Logger) (*reconcile.Result, error) {
+    func (r *Reconcile<YOUR-NAME>HelloWorld) manageRoute(hw *<YOUR-NAME>v1alpha1.<YOUR-NAME>HelloWorld, reqLogger logr.Logger) (*reconcile.Result, error) {
       //Check if route already exists, if not create a new one
       route := &routev1.Route{}
       err := r.client.Get(context.TODO(), types.NamespacedName{Name: hw.Name, Namespace: hw.Namespace}, route)
@@ -233,7 +233,7 @@ But first add the following functions to `pkg/controller/<YOUR-NAME>helloworld/<
     ```
 4. `manageService`
     ```go
-    func (r *ReconcileDimaHelloWorld) manageService(hw *dimav1alpha1.DimaHelloWorld, reqLogger logr.Logger) (*reconcile.Result, error) {
+    func (r *Reconcile<YOUR-NAME>HelloWorld) manageService(hw *<YOUR-NAME>v1alpha1.<YOUR-NAME>HelloWorld, reqLogger logr.Logger) (*reconcile.Result, error) {
       service := &corev1.Service{}
       err := r.client.Get(context.TODO(), types.NamespacedName{Name: hw.Name, Namespace: hw.Namespace}, service)
       if err != nil && errors.IsNotFound(err) {
@@ -269,7 +269,7 @@ But first add the following functions to `pkg/controller/<YOUR-NAME>helloworld/<
     ```
 5. `manageConfigMap`
     ```go
-    func (r *ReconcileDimaHelloWorld) manageConfigMap(hw *dimav1alpha1.DimaHelloWorld, reqLogger logr.Logger) (*reconcile.Result, error) {
+    func (r *Reconcile<YOUR-NAME>HelloWorld) manageConfigMap(hw *<YOUR-NAME>v1alpha1.<YOUR-NAME>HelloWorld, reqLogger logr.Logger) (*reconcile.Result, error) {
       cm := &corev1.ConfigMap{}
       err := r.client.Get(context.TODO(), types.NamespacedName{Name: hw.Name, Namespace: hw.Namespace}, cm)
       if err != nil && errors.IsNotFound(err) {
@@ -310,7 +310,7 @@ But first add the following functions to `pkg/controller/<YOUR-NAME>helloworld/<
 6. `deploymentForWebServer`
     ```go
         // Resources creation functions
-      func (r *ReconcileDimaHelloWorld) deploymentForWebServer(hw *dimav1alpha1.DimaHelloWorld) (*appsv1.Deployment, error) {
+      func (r *Reconcile<YOUR-NAME>HelloWorld) deploymentForWebServer(hw *<YOUR-NAME>v1alpha1.<YOUR-NAME>HelloWorld) (*appsv1.Deployment, error) {
         var replicas int32
         replicas = 1
         labels := map[string]string{
@@ -376,7 +376,7 @@ But first add the following functions to `pkg/controller/<YOUR-NAME>helloworld/<
     ```
 7. `serviceForWebServer`
     ```go
-    func (r *ReconcileDimaHelloWorld) serviceForWebServer(hw *dimav1alpha1.DimaHelloWorld, service *corev1.Service) error {
+    func (r *Reconcile<YOUR-NAME>HelloWorld) serviceForWebServer(hw *<YOUR-NAME>v1alpha1.<YOUR-NAME>HelloWorld, service *corev1.Service) error {
       labels := map[string]string{
         "app": hw.Name,
       }
@@ -400,7 +400,7 @@ But first add the following functions to `pkg/controller/<YOUR-NAME>helloworld/<
     ```
 8. `routeForWebServer`
     ```go
-    func (r *ReconcileDimaHelloWorld) routeForWebServer(hw *dimav1alpha1.DimaHelloWorld) (*routev1.Route, error) {
+    func (r *Reconcile<YOUR-NAME>HelloWorld) routeForWebServer(hw *<YOUR-NAME>v1alpha1.<YOUR-NAME>HelloWorld) (*routev1.Route, error) {
       labels := map[string]string{
         "app": hw.Name,
       }
@@ -429,7 +429,7 @@ But first add the following functions to `pkg/controller/<YOUR-NAME>helloworld/<
     ```
 9. `configMapForWebServer`
     ```go
-    func (r *ReconcileDimaHelloWorld) configMapForWebServer(hw *dimav1alpha1.DimaHelloWorld) (*corev1.ConfigMap, error) {
+    func (r *Reconcile<YOUR-NAME>HelloWorld) configMapForWebServer(hw *<YOUR-NAME>v1alpha1.<YOUR-NAME>HelloWorld) (*corev1.ConfigMap, error) {
       labels := map[string]string{
         "app": hw.Name,
       }
@@ -451,7 +451,7 @@ But first add the following functions to `pkg/controller/<YOUR-NAME>helloworld/<
     ```
 10. `syncConfigMapForWebServer`
     ```go
-    func (r *ReconcileDimaHelloWorld) syncConfigMapForWebServer(hw *dimav1alpha1.DimaHelloWorld, cm *corev1.ConfigMap) (syncRequired bool, err error) {
+    func (r *Reconcile<YOUR-NAME>HelloWorld) syncConfigMapForWebServer(hw *<YOUR-NAME>v1alpha1.<YOUR-NAME>HelloWorld, cm *corev1.ConfigMap) (syncRequired bool, err error) {
       if hw.Spec.Message != cm.Data["index.html"] {
         log.Info("Message in CR spec not the same as in CM, gonna update website cm")
         cm.Data["index.html"] = hw.Spec.Message
@@ -463,12 +463,12 @@ But first add the following functions to `pkg/controller/<YOUR-NAME>helloworld/<
     ```
 Update the `Reconcile` function with the following code
 ```go
-func (r *ReconcileDimaHelloWorld) Reconcile(request reconcile.Request) (reconcile.Result, error) {
+func (r *Reconcile<YOUR-NAME>HelloWorld) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.Info("Reconciling HelloWorld")
 
 	// Fetch the HelloWorld instance
-	hw := &dimav1alpha1.DimaHelloWorld{}
+	hw := &<YOUR-NAME>v1alpha1.<YOUR-NAME>HelloWorld{}
 	err := r.client.Get(context.TODO(), request.NamespacedName, hw)
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -550,7 +550,7 @@ Finally add `Finalizer` functions
 2. Add import `"github.com/nlopes/slack"`
 3. `initFinalization`
     ```go
-    func (r *ReconcileDimaHelloWorld) initFinalization(hw *dimav1alpha1.DimaHelloWorld, reqLogger logr.Logger) error {
+    func (r *Reconcile<YOUR-NAME>HelloWorld) initFinalization(hw *<YOUR-NAME>v1alpha1.<YOUR-NAME>HelloWorld, reqLogger logr.Logger) error {
       isHwMarkedToBeDeleted := hw.GetDeletionTimestamp() != nil
       if isHwMarkedToBeDeleted {
         if contains(hw.GetFinalizers(), hwFinalizer) {
@@ -585,7 +585,7 @@ Finally add `Finalizer` functions
     ```
 4. `finalizeHw`
     ```go
-    func (r *ReconcileDimaHelloWorld) finalizeHw(hw *dimav1alpha1.DimaHelloWorld, reqLogger logr.Logger, ) error {
+    func (r *Reconcile<YOUR-NAME>HelloWorld) finalizeHw(hw *<YOUR-NAME>v1alpha1.<YOUR-NAME>HelloWorld, reqLogger logr.Logger, ) error {
       slackToken, err := getSlackToken()
       if err != nil {
         reqLogger.Error(err, "Gonna skip finzalize, the error during getting slack token")
@@ -609,7 +609,7 @@ Finally add `Finalizer` functions
     ```
 5. `addFinalizer`
     ```go
-    func (r *ReconcileDimaHelloWorld) addFinalizer(hw *dimav1alpha1.DimaHelloWorld, reqLogger logr.Logger) error {
+    func (r *Reconcile<YOUR-NAME>HelloWorld) addFinalizer(hw *<YOUR-NAME>v1alpha1.<YOUR-NAME>HelloWorld, reqLogger logr.Logger) error {
       reqLogger.Info("Adding Finalizer for the Memcached")
       hw.SetFinalizers(append(hw.GetFinalizers(), hwFinalizer))
       // Update CR
@@ -671,7 +671,7 @@ Before running our `hw-operator`, we’ll have to finish more two steps
     ```
 2. Create CRD 
     ```bash
-    oc create -f deploy/crds/dima.hw.okto.io_dimahelloworlds_crd.yaml
+    oc create -f deploy/crds/<YOUR-NAME>.hw.okto.io_<YOUR-NAME>helloworlds_crd.yaml
     ```
 
 Start the operator from project root directory by executing the following  
@@ -680,17 +680,17 @@ Start the operator from project root directory by executing the following
 ```
 
 Once `hw-operator` is up and running, create new CR
-1. Edit the deploy/crds/dima.hw.okto.io_v1alpha1_dimahelloworld_cr.yaml, 
+1. Edit the deploy/crds/<YOUR-NAME>.hw.okto.io_v1alpha1_<YOUR-NAME>helloworld_cr.yaml, 
 remove all auto generated code, and set spec with message and value 
 ```yaml
-apiVersion: dima.hw.okto.io/v1alpha1
-kind: DimaHelloWorld
+apiVersion: <YOUR-NAME>.hw.okto.io/v1alpha1
+kind: <YOUR-NAME>HelloWorld
 metadata:
-  name: example-dimahelloworld
+  name: example-<YOUR-NAME>helloworld
 spec:
-  message: "Hello world, dima!!!!"
+  message: "Hello world, <YOUR-NAME>!!!!"
 ```
 2. Create the CR
 ```bash
-oc create -f deploy/crds/dima.hw.okto.io_v1alpha1_dimahelloworld_cr.yaml
+oc create -f deploy/crds/<YOUR-NAME>.hw.okto.io_v1alpha1_<YOUR-NAME>helloworld_cr.yaml
 ```
