@@ -654,3 +654,27 @@ Finally add `Finalizer` functions
       return list
     }
     ```
+When everything in place, let’s try and run the hw-operator
+Build Operator locally can be done by standart go build utils. 
+Run the following command to build the hw-operator.
+```bash
+go build -o hw-operator cmd/manager/main.go
+```
+If the command was successful you'll find in project root directory `hw-operator` binary executable file.
+Before running our `hw-operator`, we’ll need to finish more two steps
+1. export following environment variables (it's required since we are running outside of OCP cluster )
+    ```bash
+    export KUBERNETES_CONFIG=/path/to/kubeconfig
+    export WATCH_NAMESPACE=SET_YOUR_NAMESPACE
+    export OPERATOR_NAME=hw
+    export SLACK_TOKEN=YOUR-SLACK-API-TOKEN # if empty finalizer will be skipped 
+    ```
+2. Create CRD 
+    ```bash
+    oc create -f deploy/crds/<YOUR-NAME>.hw.okto.io_helloworlds_crd.yaml
+    ```
+
+Start the operator from project root directory by executing the following  
+```bash
+./hw-operator
+```
