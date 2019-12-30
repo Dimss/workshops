@@ -136,7 +136,7 @@ updating the `pkg/controller/helloworld/helloworld_controller.go`.
     corev1 "k8s.io/api/core/v1"
     routev1 "github.com/openshift/api/route/v1"
     ```
-2. Add to the `add` function following code
+2. Update the `add` function with following code
     ```go
     // Watch for changes to primary resource HelloWorld
     err = c.Watch(&source.Kind{Type: &<YOUR-NAME>v1alpha1.HelloWorld{}}, &handler.EnqueueRequestForObject{})
