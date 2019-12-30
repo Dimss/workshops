@@ -462,7 +462,7 @@ But first add the following functions to `pkg/controller/helloworld/helloworld_c
       return false, nil
     }
     ```
-Let’s update the `Reconcile` function with the following code
+Update the `Reconcile` function with the following code
 ```go
 func (r *ReconcileHelloWorld) Reconcile(request reconcile.Request) (reconcile.Result, error) {
   reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
@@ -546,4 +546,111 @@ func (r *ReconcileHelloWorld) Reconcile(request reconcile.Request) (reconcile.Re
   return reconcile.Result{}, nil
 }
 ```
+Finally add `Finalizer` functions
+1. Define `const hwFinalizer = "finalizer.hw.okto.io"`
+2. Add import `"github.com/nlopes/slack"`
+3. `initFinalization`
+    ```go
+    func (r *ReconcileHelloWorld) initFinalization(hw *<YOUR-NAME>v1alpha1.HelloWorld, reqLogger logr.Logger) error {
+      isHwMarkedToBeDeleted := hw.GetDeletionTimestamp() != nil
+      if isHwMarkedToBeDeleted {
+        if contains(hw.GetFinalizers(), hwFinalizer) {
+          // Run finalization logic for hwFinalizer. If the
+          // finalization logic fails, don't remove the finalizer so
+          // that we can retry during the next reconciliation.
+          if err := r.finalizeHw(hw, reqLogger); err != nil {
+            reqLogger.Error(err, "Failed to run finalizer")
+            return err
+          }
+          // Remove hwFinalizer. Once all finalizers have been
+          // removed, the object will be deleted.
+          hw.SetFinalizers(remove(hw.GetFinalizers(), hwFinalizer))
+          err := r.client.Update(context.TODO(), hw)
+          if err != nil {
+            reqLogger.Error(err, "Failed to delete finalizer")
+            return err
+          }
+        }
+        return nil
+      }
     
+      // Add finalizer for this CR
+      if !contains(hw.GetFinalizers(), hwFinalizer) {
+        if err := r.addFinalizer(hw, reqLogger); err != nil {
+          reqLogger.Error(err, "Failed to add finalizer")
+          return err
+        }
+      }
+      return nil
+    }
+    ```
+4. `finalizeHw`
+    ```go
+    func (r *ReconcileHelloWorld) finalizeHw(hw *<YOUR-NAME>v1alpha1.HelloWorld, reqLogger logr.Logger, ) error {
+      slackToken, err := getSlackToken()
+      if err != nil {
+        reqLogger.Error(err, "Gonna skip finzalize, the error during getting slack token")
+        return nil
+      }
+      api := slack.New(slackToken)
+      attachment := slack.Attachment{
+        Pretext: "Hello World Operator Finalizer",
+        Color:   "danger",
+        Footer:  "HelloWorld Operator Finalizer",
+        Title:   fmt.Sprintf("WebSite %s gonna be removed from OpenShift Cluster", hw.Name),
+      }
+      channelID, timestamp, err := api.PostMessage("CQ5EXBM8C", slack.MsgOptionAttachments(attachment))
+      if err != nil {
+        reqLogger.Error(err, "Failed to send Slack message")
+      }
+      fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+      reqLogger.Info(fmt.Sprintf("Successfully finalized HW: %s", hw.Name))
+      return nil
+    }
+    ```
+5. `addFinalizer`
+    ```go
+    func (r *ReconcileHelloWorld) addFinalizer(hw *<YOUR-NAME>v1alpha1.HelloWorld, reqLogger logr.Logger) error {
+      reqLogger.Info("Adding Finalizer for the Memcached")
+      hw.SetFinalizers(append(hw.GetFinalizers(), hwFinalizer))
+      // Update CR
+      err := r.client.Update(context.TODO(), hw)
+      if err != nil {
+        reqLogger.Error(err, "Failed to update Rdbc with finalizer")
+        return err
+      }
+      return nil
+    }
+    ```
+6. `getSlackToken`
+    ```go
+    func getSlackToken() (string, error) {
+      ns, found := os.LookupEnv("SLACK_TOKEN")
+      if !found {
+        return "", fmt.Errorf("%s must be set", "SLACK_TOKEN")
+      }
+      return ns, nil
+    }
+    ```
+7. `contains`
+    ```go
+    func contains(list []string, s string) bool {
+      for _, v := range list {
+        if v == s {
+          return true
+        }
+      }
+      return false
+    }
+    ```
+8. `remove`
+    ```go
+    func remove(list []string, s string) []string {
+      for i, v := range list {
+        if v == s {
+          list = append(list[:i], list[i+1:]...)
+        }
+      }
+      return list
+    }
+    ```
