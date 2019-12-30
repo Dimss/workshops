@@ -681,16 +681,21 @@ Start the operator from project root directory by executing the following
 
 Once `hw-operator` is up and running, create new CR
 1. Edit the deploy/crds/<YOUR-NAME>.hw.okto.io_v1alpha1_<YOUR-NAME>helloworld_cr.yaml, 
-remove all auto generated code, and set spec with message and value 
-```yaml
-apiVersion: <YOUR-NAME>.hw.okto.io/v1alpha1
-kind: <YOUR-NAME>HelloWorld
-metadata:
-  name: example-<YOUR-NAME>helloworld
-spec:
-  message: "Hello world, <YOUR-NAME>!!!!"
-```
+    remove all auto generated code, and set spec with message and value 
+    ```yaml
+    apiVersion: <YOUR-NAME>.hw.okto.io/v1alpha1
+    kind: <YOUR-NAME>HelloWorld
+    metadata:
+      name: example-<YOUR-NAME>helloworld
+    spec:
+      message: "Hello world, <YOUR-NAME>!!!!"
+    ```
 2. Create the CR
-```bash
-oc create -f deploy/crds/<YOUR-NAME>.hw.okto.io_v1alpha1_<YOUR-NAME>helloworld_cr.yaml
-```
+    ```bash
+    oc create -f deploy/crds/<YOUR-NAME>.hw.okto.io_v1alpha1_<YOUR-NAME>helloworld_cr.yaml
+    ```
+3. Check the `hw-operator` logs, if everything ok, you'll see new `Deployment`, `Service`, `Route` and `ConfigMap` are created by by operator.
+    once the Deployment's pod is ready, try to access to it through the `Route`. To get the Route url, run the following command 
+    ```bash
+    oc get route 
+    ```
