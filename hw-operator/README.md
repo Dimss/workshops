@@ -1,6 +1,6 @@
 ## Hello World K8S Operator tutorial with Operator SDK and OpenShift
 
-This guide walks through an example of building a simple hw-operator using the operator-sdk CLI tool and controller-runtime library API.
+This guide walks through an example of building a simple hw-operator using the `operator-sdk` CLI tool.
 
 ### Prerequisites 
 1. [Golang](https://golang.org/doc/install) 
