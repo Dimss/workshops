@@ -661,7 +661,7 @@ Run the following command to build the hw-operator.
 go build -o hw-operator cmd/manager/main.go
 ```
 If the command was successful you'll find in project root directory `hw-operator` binary executable file.
-Before running our `hw-operator`, we’ll need to finish more two steps
+Before running our `hw-operator`, we’ll have to finish more two steps
 1. export following environment variables (it's required since we are running outside of OCP cluster )
     ```bash
     export KUBERNETES_CONFIG=/path/to/kubeconfig
