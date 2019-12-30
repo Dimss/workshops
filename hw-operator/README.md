@@ -694,8 +694,10 @@ Once `hw-operator` is up and running, create new CR
     ```bash
     oc create -f deploy/crds/<YOUR-NAME>.hw.okto.io_v1alpha1_<YOUR-NAME>helloworld_cr.yaml
     ```
-3. Check the `hw-operator` logs, if everything ok, you'll see new `Deployment`, `Service`, `Route` and `ConfigMap` are created by by operator.
-    once the Deployment's pod is ready, try to access to it through the `Route`. To get the Route url, run the following command 
+3. Check the `hw-operator` logs, if everything ok, you'll see new `Deployment`, `Service`, `Route` 
+    and `ConfigMap` are created by the operator.
+    Once the Deployment's pod is ready, try to access to it through the `Route`. 
+    To get the `Route` url, run the following command 
     ```bash
     oc get route 
     ```
