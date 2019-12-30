@@ -375,3 +375,90 @@ But first add the following functions to `pkg/controller/helloworld/helloworld_c
       return dep, nil
     }
     ```
+7. `serviceForWebServer`
+    ```go
+    func (r *ReconcileHelloWorld) serviceForWebServer(hw *<YOUR-NAME>v1alpha1.HelloWorld, service *corev1.Service) error {
+      labels := map[string]string{
+        "app": hw.Name,
+      }
+      ports := []corev1.ServicePort{
+        {
+          Name: "https",
+          Port: 8080,
+        },
+      }
+      service.ObjectMeta.Name = hw.Name
+      service.ObjectMeta.Namespace = hw.Namespace
+      service.ObjectMeta.Labels = labels
+      service.Spec.Selector = map[string]string{"app": hw.Name}
+      service.Spec.Ports = ports
+      if err := controllerutil.SetControllerReference(hw, service, r.scheme); err != nil {
+        log.Error(err, "Error set controller reference for server service")
+        return err
+      }
+      return nil
+    }
+    ```
+8. `routeForWebServer`
+    ```go
+    func (r *ReconcileHelloWorld) routeForWebServer(hw *<YOUR-NAME>v1alpha1.HelloWorld) (*routev1.Route, error) {
+      labels := map[string]string{
+        "app": hw.Name,
+      }
+      route := &routev1.Route{
+        ObjectMeta: metav1.ObjectMeta{
+          Name:      hw.Name,
+          Namespace: hw.Namespace,
+          Labels:    labels,
+        },
+        Spec: routev1.RouteSpec{
+          TLS: &routev1.TLSConfig{
+            Termination: routev1.TLSTerminationEdge,
+          },
+          To: routev1.RouteTargetReference{
+            Kind: "Service",
+            Name: hw.Name,
+          },
+        },
+      }
+      if err := controllerutil.SetControllerReference(hw, route, r.scheme); err != nil {
+        log.Error(err, "Error set controller reference for server route")
+        return nil, err
+      }
+      return route, nil
+    }
+    ```
+9. `configMapForWebServer`
+    ```go
+    func (r *ReconcileHelloWorld) configMapForWebServer(hw *<YOUR-NAME>v1alpha1.HelloWorld) (*corev1.ConfigMap, error) {
+      labels := map[string]string{
+        "app": hw.Name,
+      }
+      cm := &corev1.ConfigMap{
+        ObjectMeta: metav1.ObjectMeta{
+          Name:      hw.Name,
+          Namespace: hw.Namespace,
+          Labels:    labels,
+        },
+        Data: map[string]string{"index.html": hw.Spec.Message},
+      }
+    
+      if err := controllerutil.SetControllerReference(hw, cm, r.scheme); err != nil {
+        log.Error(err, "Error set controller reference for configmap")
+        return nil, err
+      }
+      return cm, nil
+    }
+    ```
+10. `syncConfigMapForWebServer`
+    ```go
+    func (r *ReconcileHelloWorld) syncConfigMapForWebServer(hw *<YOUR-NAME>v1alpha1.HelloWorld, cm *corev1.ConfigMap) (syncRequired bool, err error) {
+      if hw.Spec.Message != cm.Data["index.html"] {
+        log.Info("Message in CR spec not the same as in CM, gonna update website cm")
+        cm.Data["index.html"] = hw.Spec.Message
+        return true, nil
+      }
+      log.Info("No sync required, the message didn't changed")
+      return false, nil
+    }
+    ```
