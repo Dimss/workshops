@@ -660,16 +660,19 @@ Run the following command to build the hw-operator.
 go build -o hw-operator cmd/manager/main.go
 ```
 If the command was successful you'll find in project root directory `hw-operator` binary executable file.
-Before running our `hw-operator`, we’ll have to finish more two steps
-1. Export following environment variables 
+Before running our `hw-operator`, we’ll have to finish more three steps
+1. Create new project for your operator 
+   ```bash
+   oc create project -f <YOUR-NAME>-hw
+   ```
+2. Export following environment variables 
 (it's required since we are running outside of the OCP cluster )
     ```bash
-    export KUBECONFIG=/path/to/kubeconfig # could be omitted if your kubeconfig file located in default location
-    export WATCH_NAMESPACE=SET_YOUR_NAMESPACE
-    export OPERATOR_NAME=hw
+    export WATCH_NAMESPACE=<YOUR-NAME>-hw
+    export OPERATOR_NAME=<YOUR-NAME>-hw
     export SLACK_TOKEN=YOUR-SLACK-API-TOKEN # if empty finalizer will be skipped 
     ```
-2. Create CRD 
+3. Create CRD 
     ```bash
     oc create -f deploy/crds/<YOUR-NAME>.hw.okto.io_<YOUR-NAME>helloworlds_crd.yaml
     ```
