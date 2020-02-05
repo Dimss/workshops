@@ -745,7 +745,11 @@ operator-sdk build <docker-image-name>
 ```bash
 s2i build . docker.io/dimssss/golang-s2i:0.5 <your-image-name>
 ```
-6.Create OCP native build with BuildConfig and S2I build strategy
+6.Create image push secret
+```bash
+oc create secret docker-registry <YOUR-DOCKER-PUSH-SECRET> --docker-server=DOCKER_REGISTRY_SERVER --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAI
+```
+7.Create OCP native build with BuildConfig and S2I build strategy
 ```bash
 cat <<EOF >bc.yaml
 kind: "BuildConfig"
@@ -771,11 +775,37 @@ spec:
       name: <YOUR-DOCKER-PUSH-SECRET>
 EOF
 ```
-7.Deploy build config 
+8.Deploy build config 
 ```bash
 oc create -f bc.yaml
 ```
-8.Start build 
+9.Start build 
 ```bash
 oc start-build hw-operator -F
+```
+### Deploy Operator inside OCP cluster
+1.Create `ServiceAccount`
+```bash
+oc create -f deploy/service_account.yaml   
+```
+2.Update `Role` with `Route` permissions, add to the bottom of the `deploy/role.yaml` file the following
+```yaml
+- apiGroups:
+  - route.openshift.io
+  resources:
+  - 'routes'
+  verbs:
+  - '*'
+```
+3.Create `Role`
+```bash
+oc create -f deploy/role.yaml
+```
+4.Create `RoleBinding`
+```bash
+oc create -f deploy/role_binding.yaml
+```
+5.Deploy Operator
+```bash
+oc create -f deploy/operator.yaml
 ```
