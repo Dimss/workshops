@@ -663,7 +663,7 @@ If the command was successful you'll find in project root directory `hw-operator
 Before running our `hw-operator`, we’ll have to finish more three steps
 1. Create new project for your operator 
    ```bash
-   oc create project -f <YOUR-NAME>-hw
+   oc  new-project -f <YOUR-NAME>-hw
    ```
 2. Export following environment variables 
 (it's required since we are running outside of the OCP cluster )
@@ -704,3 +704,78 @@ Once `hw-operator` is up and running, create new CR
     ```bash
     oc get route 
     ```
+
+### Build Operator image with `operator-sdk build`
+```bash
+operator-sdk build <docker-image-name>
+```
+
+### Create custom build with S2I
+
+1. Create two `S2I` files `assemble` and `run`
+  ```bash
+  touch .s2i/bin/assemble
+  touch .s2i/bin/run
+  ```
+
+2.Update `assemble` script with following
+  ```bash
+  #!/bin/ash
+  set -x
+  mv /tmp/src /go/src/hw-operator
+  cd /go/src/hw-operator
+  export GO111MODULE=on
+  echo "Building sources..."
+  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -x -o /go/bin/hw-operator -mod vendor cmd/manager/main.go
+  rm -fr /go/src/hw-operator
+  ls -all /go/bin
+  ```
+
+3.Update `run` script with the following 
+  ```bash
+  #!/bin/ash
+  set -x
+  pwd
+  ls -all
+  hw-operator
+  ```
+4.Install `S2I 1.2` binary from [here](https://github.com/openshift/source-to-image/releases/tag/v1.2.0)  
+
+5.Build Operator image locally with S2I
+```bash
+s2i build . docker.io/dimssss/golang-s2i:0.5 <your-image-name>
+```
+6.Create OCP native build with BuildConfig and S2I build strategy
+```bash
+cat <<EOF >bc.yaml
+kind: "BuildConfig"
+apiVersion: "build.openshift.io/v1"
+metadata:
+  name: hw-operator
+  namespace: <YOUR-NAMESPACE>
+spec:
+  runPolicy: "Serial"
+  source:
+    git:
+      uri: <YOUR-GIT-URL>
+  strategy:
+    sourceStrategy:
+      from:
+        kind: "DockerImage"
+        name: "docker.io/dimssss/golang-s2i:0.5"
+  output:
+    to:
+      kind: "DockerImage"
+      name: "<YOUR-DOCKER-IMAGE>"
+    pushSecret:
+      name: <YOUR-DOCKER-PUSH-SECRET>
+EOF
+```
+7.Deploy build config 
+```bash
+oc create -f bc.yaml
+```
+8.Start build 
+```bash
+oc start-build hw-operator -F
+```
