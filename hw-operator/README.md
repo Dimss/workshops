@@ -741,7 +741,7 @@ operator-sdk build <docker-image-name>
   ```
 4.Install `S2I 1.2` binary from [here](https://github.com/openshift/source-to-image/releases/tag/v1.2.0)  
 
-5.Build Operator image locally with S2I
+5.Build Operator image locally with [S2I](https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md)
 ```bash
 s2i build . docker.io/dimssss/golang-s2i:0.5 <your-image-name>
 ```
