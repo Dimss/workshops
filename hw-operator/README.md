@@ -710,7 +710,7 @@ Once `hw-operator` is up and running, create new CR
 operator-sdk build <docker-image-name>
 ```
 
-### Create custom build with S2I
+### Create custom build with [S2I](https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md)
 
 1. Create two `S2I` files `assemble` and `run`
   ```bash
