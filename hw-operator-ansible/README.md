@@ -116,6 +116,7 @@ pipenv run ansible-playbook hw.yaml -e '{"meta":{"namespace":"hwop"},"state":"ab
 ```
  
 Now, let's run the Ansible playbook as K8S Operator
+
 1.Create `CRD`
 ```bash
 oc create -f deploy/crds/<YOUR-NAME>.okto.io_<YOUR-NAME>helloworlds_crd.yaml
