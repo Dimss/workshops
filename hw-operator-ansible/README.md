@@ -37,7 +37,7 @@ pipenv --python 3
 pipenv install ansible ansible-runner openshift ansible-runner-http
 ```
 
-Update you Ansible code as following 
+### Update you Ansible code as following 
 
 1.Create Ansible Playbook file `hw.yaml` at root directory of your project
 ```yaml
@@ -105,7 +105,7 @@ spec:
     definition: "{{ lookup('template', 'templates/nginx-deployment.yaml') }}"
 ```
 
-Now when everything in place, let's test our playbook with Ansible (without OperatorSDK at all)
+### Now when everything in place, let's test our playbook with Ansible (without OperatorSDK at all)
 ```bash
 pipenv run ansible-playbook hw.yaml -e '{"meta":{"namespace":"<YOUR-NAMESPACE>"}}'
 ```
@@ -115,7 +115,7 @@ Before continuing with OperatorSDK cleanup your deployment
 pipenv run ansible-playbook hw.yaml -e '{"meta":{"namespace":"hwop"},"state":"absent"}'
 ```
  
-Now, let's run the Ansible playbook as K8S Operator
+### Now, let's run the Ansible playbook as K8S Operator
 
 1.Create `CRD`
 ```bash
