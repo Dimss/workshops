@@ -203,4 +203,4 @@ oc create -f deploy/crds/*_cr.yaml
 oc delete -f deploy/crds/*_cr.yaml
 ```  
 
-4. Make sure Nginx Deployment and pod has been removed from the cluster
+4.Make sure Nginx Deployment and pod has been removed from the cluster
