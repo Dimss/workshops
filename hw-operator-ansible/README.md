@@ -135,3 +135,72 @@ To cleanup your deployment, remove the `CR`
 ```bash
 oc delete -f deploy/crds/<YOUR-NAME>.okto.io_v1alpha1_<YOUR-NAME>helloworld_cr.yaml
 ```
+
+### Build your Operator 
+1.Add following to `build/Dockerfile` 
+```dockerfile
+COPY hw.yml ${HOME}/hw.yml
+``` 
+2.Build image locally and optionally push it to remove registry 
+```bash
+operator-sdk build <IMAGE-NAME>
+```
+
+Build Operator image with OpenShift Custom Build **do not forget to commit and push all your changes** 
+1.Create `BuildConfig` object  
+```yaml
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+  name: "<YOUR-NAME>-ansible-operatorsdk-builder"
+spec:
+  runPolicy: "Serial"
+  source:
+    git:
+      uri: "<GIT-URL>"
+  strategy:
+    customStrategy:
+      from:
+        kind: "DockerImage"
+        name: "docker.io/dimssss/ansible-operatorsdk-builder:0.4"
+  output:
+    to:
+      kind: "DockerImage"
+      name: "image-registry.openshift-image-registry.svc:5000/<YOUR-PROJECT>/<YOUR-NAME>-hw-operator:latest"
+```
+2.Start build 
+```bash
+oc start-build -F <YOUR-NAME>-ansible-operatorsdk-builder
+```
+
+### Deploy your Operator 
+1.Create `Role`, `ServiceAccount` and `RoleBinding` for your operator 
+```bash
+oc create -f deploy/role.yaml
+oc create -f deploy/service_account.yaml
+oc create -f deploy/role_binding.yaml
+```
+2.Make sure `CRD` was created 
+```bash
+oc apply -f deploy/crds/*_crd.yaml
+``` 
+3.Update `deploy/operator.yaml` set `image` to  `image-registry.openshift-image-registry.svc:5000/<YOUR-PROJECT>/<YOUR-NAME>-hw-operator:latest`
+
+4.Deploy Operator 
+```bash
+oc create -f deploy/operator.yaml
+```
+
+### Test your operator 
+1.Create `CR`
+```bash
+oc create -f deploy/crds/*_cr.yaml
+```
+2.Make sure new Nginx Deployment and pod has been created
+
+3.Remove `CR`
+```bash
+oc delete -f deploy/crds/*_cr.yaml
+```  
+
+4. Make sure Nginx Deployment and pod has been removed from the cluster
