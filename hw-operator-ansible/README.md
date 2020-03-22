@@ -123,7 +123,7 @@ oc create -f deploy/crds/<YOUR-NAME>.okto.io_<YOUR-NAME>helloworlds_crd.yaml
 ```
 2.Start the Operator locally
 ```bash
-operator-sdk up local --namespace=hwop --watches-file=watches-dev.yaml
+operator-sdk up local --namespace=<YOUR-PROJECT> --watches-file=watches-dev.yaml
 ```
 3.Create `CR`
 ```bash
