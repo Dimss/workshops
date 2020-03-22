@@ -147,6 +147,7 @@ operator-sdk build <IMAGE-NAME>
 ```
 
 Build Operator image with OpenShift Custom Build **do not forget to commit and push all your changes** 
+
 1.Create `BuildConfig` object  
 ```yaml
 kind: "BuildConfig"
