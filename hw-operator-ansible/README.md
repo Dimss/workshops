@@ -112,7 +112,7 @@ pipenv run ansible-playbook hw.yaml -e '{"meta":{"namespace":"<YOUR-NAMESPACE>"}
 If everything went well, you should see single Nginx pod running. 
 Before continuing with OperatorSDK cleanup your deployment
 ```bash
-pipenv run ansible-playbook hw.yaml -e '{"meta":{"namespace":"hwop"},"state":"absent"}'
+pipenv run ansible-playbook hw.yaml -e '{"meta":{"namespace":"<YOUR-NAMESPACE>"},"state":"absent"}'
 ```
  
 ### Now, let's run the Ansible playbook as K8S Operator
