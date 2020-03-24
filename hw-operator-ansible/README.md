@@ -8,7 +8,7 @@ This guide walks through an example of building a simple hw-operator using the `
 3. [Operator SDK CLI v0.13.0](https://github.com/operator-framework/operator-sdk/releases/tag/v0.13.0)
 4. [OpenShift client (oc command)](https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/)
 5. OpenShift cluster
-6. Optional - IDE with Golang support ([VSCode](https://code.visualstudio.com/download), [GoLand](https://www.jetbrains.com/go), etc..)
+6. Optional - IDE with ([VSCode](https://code.visualstudio.com/download), etc..)
 
 
 ### Let's start
