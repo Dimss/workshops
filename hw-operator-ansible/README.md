@@ -139,7 +139,7 @@ oc delete -f deploy/crds/<YOUR-NAME>.okto.io_v1alpha1_<YOUR-NAME>helloworld_cr.y
 ### Build your Operator 
 1.Add following to `build/Dockerfile` 
 ```dockerfile
-COPY hw.yml ${HOME}/hw.yml
+COPY hw.yaml ${HOME}/hw.yaml
 ``` 
 2.Build image locally and optionally push it to remove registry 
 ```bash
